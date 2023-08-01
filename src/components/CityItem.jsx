@@ -8,6 +8,7 @@ const formatDate = (date) =>
     month: "long",
     year: "numeric",
   }).format(new Date(date));
+  
 function CityItem({ city }) {
   /*
 "cityName": "Lisbon",
@@ -24,7 +25,7 @@ function CityItem({ city }) {
     */
   const { currentCity, deleteCity } = useCities();
   const { cityName, date, emoji, id, position } = city;
-
+  console.log("CityItem currentCity=", currentCity);
   function handleClick(e) {
     e.preventDefault();
     console.log("handleClick");

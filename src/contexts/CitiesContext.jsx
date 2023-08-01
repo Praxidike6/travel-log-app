@@ -5,6 +5,12 @@ import {
   useReducer,
   useCallback,
 } from "react";
+import {
+  getCities,
+  createCity as createNewCity,
+  getCityById,
+  deleteCity as deleteCityById,
+} from "../services/apiCities";
 
 const BASE_URL = "http://localhost:8000";
 const CitiesContext = createContext();
@@ -21,13 +27,13 @@ function reducer(state, action) {
     case "loading":
       return { ...state, isLoading: true };
     case "cities/loaded":
-      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
         cities: action.payload,
       };
     case "city/loaded":
+      console.log("cityLoaded data=", action.payload);
       return { ...state, isLoading: false, currentCity: action.payload };
     case "city/created":
       return {
@@ -56,12 +62,14 @@ function CitiesProvider({ children }) {
     initialState
   );
 
+
+
   useEffect(function () {
     async function fetchCities() {
       dispatch({ type: "loading" });
       try {
-        const res = await fetch(`${BASE_URL}/cities`);
-        const data = await res.json();
+        const data = await getCities();
+        console.log("after getCities =", data);
         dispatch({ type: "cities/loaded", payload: data });
       } catch {
         dispatch({
@@ -75,11 +83,12 @@ function CitiesProvider({ children }) {
 
   const getCity = useCallback(
     async function getCity(id) {
-      if (+id === currentCity.id) return;
+      console.log("getCity id=", id);
+      console.log("getCity currentCityId",currentCity.id);
+      if (Number(id) === currentCity.id) { return};
       dispatch({ type: "loading" });
       try {
-        const res = await fetch(`${BASE_URL}/cities/${id}`);
-        const data = await res.json();
+        const data = await getCityById(id);
         dispatch({ type: "city/loaded", payload: data });
       } catch {
         dispatch({
@@ -91,17 +100,17 @@ function CitiesProvider({ children }) {
     [currentCity.id]
   );
 
+  
+
   async function createCity(newCity) {
     dispatch({ type: "loading" });
     try {
-      const res = await fetch(`${BASE_URL}/cities`, {
-        method: "POST",
-        body: JSON.stringify(newCity),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await res.json();
+      console.log("createCity before data=", newCity);
+      const data = await createNewCity(newCity);
+     
+      console.log("after createCity =", data);
       // add the new city to the city state to get rendered
-      dispatch({ type: "city/created", payload: data });
+      dispatch({ type: "city/created", payload: data});
     } catch {
       dispatch({
         type: "rejected",
@@ -109,13 +118,10 @@ function CitiesProvider({ children }) {
       });
     }
   }
-
   async function deleteCity(id) {
     dispatch({ type: "loading" });
     try {
-      await fetch(`${BASE_URL}/cities/${id}`, {
-        method: "DELETE",
-      });
+      await deleteCityById(id);
 
       // add the new city to the city state to get rendered
       dispatch({ type: "city/deleted", payload: id });
@@ -127,6 +133,8 @@ function CitiesProvider({ children }) {
       });
     }
   }
+
+
   return (
     <CitiesContext.Provider
       value={{
@@ -150,3 +158,73 @@ function useCities() {
   return context;
 }
 export { CitiesProvider, useCities };
+
+  /* useEffect(function () {
+    async function fetchCities() {
+      dispatch({ type: "loading" });
+      try {
+        const res = await fetch(`${BASE_URL}/cities`);
+        const data = await res.json();
+        dispatch({ type: "cities/loaded", payload: data });
+      } catch {
+        dispatch({
+          type: "rejected",
+          payload: "There was an error loading cities",
+        });
+      }
+    }
+    fetchCities();
+  }, []); */
+    /* async function deleteCity(id) {
+    dispatch({ type: "loading" });
+    try {
+      await fetch(`${BASE_URL}/cities/${id}`, {
+        method: "DELETE",
+      });
+
+      // add the new city to the city state to get rendered
+      dispatch({ type: "city/deleted", payload: id });
+      //setCities((cities) => cities.filter((city) => city.id !== id));
+    } catch {
+      dispatch({
+        type: "rejected",
+        payload: "There was an error deleting  city",
+      });
+    }
+  } */
+  /*  const getCity = useCallback(
+    async function getCity(id) {
+      if (+id === currentCity.id) return;
+      dispatch({ type: "loading" });
+      try {
+        const res = await fetch(`${BASE_URL}/cities/${id}`);
+        const data = await res.json();
+        dispatch({ type: "city/loaded", payload: data });
+      } catch {
+        dispatch({
+          type: "rejected",
+          payload: "There was an error getting the city.",
+        });
+      }
+    },
+    [currentCity.id]
+  ); */
+
+  /* async function createCity(newCity) {
+    dispatch({ type: "loading" });
+    try {
+      const res = await fetch(`${BASE_URL}/cities`, {
+        method: "POST",
+        body: JSON.stringify(newCity),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      // add the new city to the city state to get rendered
+      dispatch({ type: "city/created", payload: data });
+    } catch {
+      dispatch({
+        type: "rejected",
+        payload: "There was an error creating the city",
+      });
+    }
+  } */

@@ -36,21 +36,21 @@ function Map() {
     [mapLat, mapLng]
   );
 
-  /* const thunderFTiles = [
+  const thunderFTiles = [
     "atlas",
     "landscape",
     "neighbourhood",
     "outdoors",
     "pioneer",
     "mobile-atlas",
-  ]; */
-  //const tfAPI = "2d6422de31704a078e8c2dc851e958bf";
+  ];
+  const tfAPI = "2d6422de31704a078e8c2dc851e958bf";
 
-  //const mapTile1 = "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png";
-  //const mapTile2 = `https://tile.thunderforest.com/${thunderFTiles[3]}/{z}/{x}/{y}.png?apikey=${tfAPI}`;
+  const mapTile1 = "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png";
+  const mapTile2 = `https://tile.thunderforest.com/${thunderFTiles[1]}/{z}/{x}/{y}.png?apikey=${tfAPI}`;
   const mapTile3 = "http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png";
-  //const mapTile4 =
-  //  "https://conze.pt/app/climate-data/data/meantemp/6/maptiles/{z}/{x}/{-y}.png";
+  const mapTile4 =
+    "https://conze.pt/app/climate-data/data/meantemp/6/maptiles/{z}/{x}/{-y}.png";
 
   useEffect(
     function () {
@@ -74,7 +74,7 @@ function Map() {
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url={mapTile3}
+          url={mapTile1}
         />
         {cities.map((city) => (
           <Marker

@@ -36,6 +36,11 @@ function City() {
 
   const { cityName, emoji, date, notes } = currentCity;
 
+  console.log("City cityName =", cityName);
+  console.log("City emoji =", emoji);
+  console.log("City date =", date);
+  console.log("City notes =", notes);
+
   if (isLoading) return <Spinner />;
 
   //alert(emoji);
