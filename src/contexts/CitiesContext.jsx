@@ -12,7 +12,7 @@ import {
   deleteCity as deleteCityById,
 } from "../services/apiCities";
 
-const BASE_URL = "http://localhost:8000";
+
 const CitiesContext = createContext();
 
 const initialState = {
@@ -159,6 +159,7 @@ function useCities() {
 }
 export { CitiesProvider, useCities };
 
+/*const BASE_URL = "http://localhost:8000";*/
   /* useEffect(function () {
     async function fetchCities() {
       dispatch({ type: "loading" });
